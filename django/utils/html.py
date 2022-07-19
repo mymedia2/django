@@ -82,7 +82,10 @@ def json_script(value, element_id):
     the escaped JSON in a script tag.
     """
     from django.core.serializers.json import DjangoJSONEncoder
-    json_str = json.dumps(value, cls=DjangoJSONEncoder).translate(_json_script_escapes)
+    json_str = json.dumps(
+        value, ensure_ascii=False, separators=(',', ':'),
+        cls=DjangoJSONEncoder,
+    ).translate(_json_script_escapes)
     return format_html(
         '<script id="{}" type="application/json">{}</script>',
         element_id, mark_safe(json_str)
